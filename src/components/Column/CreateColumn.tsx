@@ -1,19 +1,14 @@
+import { useState } from 'react';
+import { useMutation } from '@apollo/client';
 import { Button, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
-import { useState } from 'react';
-import { Form } from './Form';
+import { ALL_COLUMNS, CREATE_COLUMN } from 'apollo';
+import type { AllColumnsData, NewColumnData, NewColumnVars } from 'apollo';
 
-import { useMutation } from '@apollo/client';
-import {
-    ALL_COLUMNS,
-    AllColumnsData,
-    CREATE_COLUMN,
-    NewColumnData,
-    NewColumnVars
-} from '../../apollo/board';
+import { Form } from 'components/Form';
 
-export const AddColumn = () => {
+export const CreateColumn = () => {
     const [createColumn] = useMutation<NewColumnData, NewColumnVars>(
         CREATE_COLUMN,
         {

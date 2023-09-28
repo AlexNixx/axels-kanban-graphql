@@ -1,21 +1,32 @@
 import { FC } from 'react';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { useMutation, useQuery } from '@apollo/client';
 import { Button } from '@mui/material';
-import { useMutation } from '@apollo/client';
-import {
-    ALL_COLUMNS,
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
+import { ALL_COLUMNS, DELETE_CARD, GET_CARDS, UPDATE_CARD } from 'apollo';
+import type {
+    Card,
     AllColumnsData,
-    DELETE_CARD,
     DeleteCardData,
-    DeleteCardVars
-} from '../../apollo/board';
+    DeleteCardVars,
+    UpdateCardData,
+    UpdateCardVars,
+    GetCardsData,
+    GetCardsVars
+} from 'apollo';
 
 interface DeleteCardProps {
-    cardId?: number;
+    deletedCard: Card;
     onClose: () => void;
 }
 
-export const DeleteCard: FC<DeleteCardProps> = ({ cardId, onClose }) => {
+export const DeleteCard: FC<DeleteCardProps> = ({ deletedCard, onClose }) => {
+    const { data, loading } = useQuery<GetCardsData, GetCardsVars>(GET_CARDS, {
+        variables: {
+            columnId: deletedCard.column_id
+        }
+    });
+
     const [deleteCard] = useMutation<DeleteCardData, DeleteCardVars>(
         DELETE_CARD,
         {
@@ -50,18 +61,35 @@ export const DeleteCard: FC<DeleteCardProps> = ({ cardId, onClose }) => {
             }
         }
     );
+    const [updateCard] = useMutation<UpdateCardData, UpdateCardVars>(
+        UPDATE_CARD
+    );
 
     const handleDeleteCard = () => {
-        if (cardId) {
-            deleteCard({
-                variables: { cardId }
+        deleteCard({
+            variables: { cardId: deletedCard.id }
+        });
+
+        data?.cards
+            .filter(card => card.order > deletedCard.order)
+            .forEach(card => {
+                updateCard({
+                    variables: {
+                        cardId: card.id,
+                        order: card.order - 1
+                    }
+                });
             });
-            onClose();
-        }
+
+        onClose();
     };
 
     return (
-        <Button onClick={handleDeleteCard} startIcon={<DeleteOutlineIcon />}>
+        <Button
+            onClick={handleDeleteCard}
+            disabled={loading}
+            startIcon={<DeleteOutlineIcon />}
+        >
             Delete Card
         </Button>
     );

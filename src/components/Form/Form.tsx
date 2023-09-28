@@ -32,9 +32,9 @@ export const Form: FC<CreateFormProps> = ({
             <TextField
                 value={text}
                 onChange={e => setText(e.target.value)}
-                sx={{ marginBottom: 1 }}
                 placeholder={placeholder}
                 fullWidth
+                sx={{ marginBottom: 1 }}
             />
             <Button variant='contained' onClick={handleSubmit}>
                 {buttonText}

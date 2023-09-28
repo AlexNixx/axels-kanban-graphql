@@ -1,12 +1,10 @@
 import { FC } from 'react';
-
 import { useMutation } from '@apollo/client';
-import {
-    UPDATE_CARD,
-    UpdateCardData,
-    UpdateCardVars
-} from '../../apollo/board';
-import { Form } from './Form';
+
+import { UPDATE_CARD } from 'apollo';
+import type { UpdateCardData, UpdateCardVars } from 'apollo';
+
+import { Form } from 'components/Form';
 
 interface UpdateDescriptionProps {
     cardId: number;

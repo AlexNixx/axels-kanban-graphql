@@ -1,8 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { Layout } from '../Layout/Layout';
-import { HomePage } from '../HomePage/HomePage';
-import { CardModal } from '../../components/Board/CardModal';
+import { Layout } from '../Layout';
+import { HomePage } from '../HomePage';
+import { CardModal } from 'components/Card';
 
 export const Routing = () => (
     <Routes>

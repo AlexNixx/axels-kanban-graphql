@@ -1,12 +1,11 @@
 import { FC } from 'react';
+import { useMutation } from '@apollo/client';
+import type { StoreObject } from '@apollo/client';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { IconButton } from '@mui/material';
-import { StoreObject, useMutation } from '@apollo/client';
-import {
-    DELETE_COLUMN,
-    DeleteColumnData,
-    DeleteColumnVars
-} from '../../apollo/board';
+
+import { DELETE_COLUMN } from 'apollo';
+import type { DeleteColumnData, DeleteColumnVars } from 'apollo';
 
 interface DeleteColumnProps {
     columnId: number;

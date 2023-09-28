@@ -1,9 +1,11 @@
-import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
-import { Box, Container, Modal, Stack, Typography } from '@mui/material';
-import { GET_CARD, GetCardData, GetCardParams } from '../../apollo/board';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useState } from 'react';
+import { useQuery } from '@apollo/client';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
+import { Box, Container, Modal, Stack, Typography } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+
+import { GET_CARD } from 'apollo';
+import type { GetCardData, GetCardVars } from 'apollo';
 
 import { UpdateDescription } from './UpdateDescription';
 import { UpdateTitle } from './UpdateTitle';
@@ -25,7 +27,7 @@ export const CardModal = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const { data, loading } = useQuery<GetCardData, GetCardParams>(GET_CARD, {
+    const { data, loading } = useQuery<GetCardData, GetCardVars>(GET_CARD, {
         variables: { cardId: id }
     });
 
@@ -55,7 +57,7 @@ export const CardModal = () => {
                                 description={data?.card.description}
                             />
                             <DeleteCard
-                                cardId={data?.card.id}
+                                deletedCard={data?.card!}
                                 onClose={handleCloseModel}
                             />
                         </Stack>
