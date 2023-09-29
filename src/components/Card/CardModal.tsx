@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
 import { Box, Container, Modal, Stack, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -11,21 +12,10 @@ import { UpdateDescription } from './UpdateDescription';
 import { UpdateTitle } from './UpdateTitle';
 import { DeleteCard } from './DeleteCard';
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    backgroundColor: 'white',
-    boxShadow: 24,
-    borderRadius: '5px',
-    p: 4
-};
-
 export const CardModal = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const theme = useTheme();
 
     const { data, loading } = useQuery<GetCardData, GetCardVars>(GET_CARD, {
         variables: { cardId: id }
@@ -41,7 +31,7 @@ export const CardModal = () => {
     return (
         <Container maxWidth='sm'>
             <Modal open disableAutoFocus onClose={handleCloseModel}>
-                <Box sx={style}>
+                <Box sx={cardBoxStyle(theme.palette.background.paper)}>
                     {isLoading ? (
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                             <CircularProgress />
@@ -128,3 +118,15 @@ const Description = ({
         </>
     );
 };
+
+const cardBoxStyle = (background: string) => ({
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    backgroundColor: background,
+    boxShadow: 24,
+    borderRadius: '5px',
+    p: 4
+});

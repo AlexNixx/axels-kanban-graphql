@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { Button, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -8,7 +8,7 @@ import type { AllColumnsData, NewColumnData, NewColumnVars } from 'apollo';
 
 import { Form } from 'components/Form';
 
-export const CreateColumn = () => {
+export const CreateColumn = memo(() => {
     const [createColumn] = useMutation<NewColumnData, NewColumnVars>(
         CREATE_COLUMN,
         {
@@ -35,20 +35,28 @@ export const CreateColumn = () => {
 
     const [isFormVisible, setIsFormVisible] = useState(false);
 
-    const handleAddColumn = (title: string) => {
-        if (!title.trim().length) return;
+    const handleAddColumn = useCallback(
+        (title: string) => {
+            if (!title.trim().length) return;
 
-        createColumn({
-            variables: { title }
-        });
-    };
+            createColumn({
+                variables: { title }
+            });
+        },
+        [createColumn]
+    );
+
+    const handleCloseForm = useCallback(
+        () => setIsFormVisible(!isFormVisible),
+        [isFormVisible]
+    );
 
     return (
         <Paper
             sx={{
                 padding: 1,
-                backgroundColor: 'lightgrey',
-                width: 300
+                width: 300,
+                backgroundColor: 'rgba(14,14,14,0.15)'
             }}
         >
             {isFormVisible ? (
@@ -56,17 +64,18 @@ export const CreateColumn = () => {
                     buttonText='Add column'
                     placeholder='Enter column title'
                     onSubmit={handleAddColumn}
-                    onClose={() => setIsFormVisible(!isFormVisible)}
+                    onClose={handleCloseForm}
                 />
             ) : (
                 <Button
                     fullWidth
                     startIcon={<AddIcon />}
-                    onClick={() => setIsFormVisible(!isFormVisible)}
+                    onClick={handleCloseForm}
+                    color='secondary'
                 >
                     Add another list
                 </Button>
             )}
         </Paper>
     );
-};
+});

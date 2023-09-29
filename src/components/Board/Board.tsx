@@ -1,4 +1,4 @@
-import { Grid, Box } from '@mui/material';
+import { Grid } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import { DragDropContext } from 'react-beautiful-dnd';
 import type { DropResult } from 'react-beautiful-dnd';
@@ -151,29 +151,26 @@ export const Board = () => {
     };
 
     return (
-        <Box>
-            <DragDropContext onDragEnd={handleDragEnd}>
-                <Grid
-                    container
-                    spacing={3}
-                    sx={{
-                        width: '100%',
-                        overflowX: 'scroll',
-                        flexWrap: 'nowrap',
-                        p: '2rem 0'
-                    }}
-                >
-                    {data?.columns.map(column => (
-                        <Grid item key={column.id}>
-                            <BoardColumn {...column} />
-                        </Grid>
-                    ))}
-
-                    <Grid item>
-                        <CreateColumn />
+        <DragDropContext onDragEnd={handleDragEnd}>
+            <Grid
+                container
+                spacing={3}
+                sx={{
+                    height: '90vh',
+                    overflowX: 'scroll',
+                    flexWrap: 'nowrap'
+                }}
+            >
+                {data?.columns.map(column => (
+                    <Grid item key={column.id}>
+                        <BoardColumn {...column} />
                     </Grid>
+                ))}
+
+                <Grid item>
+                    <CreateColumn />
                 </Grid>
-            </DragDropContext>
-        </Box>
+            </Grid>
+        </DragDropContext>
     );
 };

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, memo, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -13,7 +13,7 @@ interface AddCardProps {
     order: number;
 }
 
-export const CreateCard: FC<AddCardProps> = ({ columnId, order }) => {
+export const CreateCard: FC<AddCardProps> = memo(({ columnId, order }) => {
     const [createCard] = useMutation<CreateCardData, CreateCardVars>(
         CREATE_CARD,
         {
@@ -73,10 +73,11 @@ export const CreateCard: FC<AddCardProps> = ({ columnId, order }) => {
                     fullWidth
                     startIcon={<AddIcon />}
                     onClick={handleVisible}
+                    color='secondary'
                 >
                     Add a card
                 </Button>
             )}
         </>
     );
-};
+});

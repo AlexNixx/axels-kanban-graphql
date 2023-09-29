@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, memo, useMemo, useState } from 'react';
 import { Box, Paper, Stack, Typography } from '@mui/material';
 import { Droppable } from 'react-beautiful-dnd';
 
@@ -7,52 +7,38 @@ import type { Column } from 'apollo';
 import { DeleteColumn } from './DeleteColumn';
 import { BoardCard, CreateCard } from '../Card';
 
-export const BoardColumn: FC<Column> = column => {
+export const BoardColumn: FC<Column> = memo(({ id, title, cards }) => {
     const [showDeleteButton, setShowDeleteButton] = useState(false);
 
-    const sortedCards = column.cards.sort((a, b) => {
-        const [value1, value2] = [Number(a.order), Number(b.order)];
-
-        if (value1 === value2) {
-            return 0;
-        }
-        return value1 < value2 ? -1 : 1;
-    });
+    const sortedCards = useMemo(
+        () => cards.sort((a, b) => (a.order < b.order ? -1 : 1)),
+        [cards]
+    );
 
     return (
         <Paper
             sx={{
-                padding: 2,
-                backgroundColor: 'lightblue',
+                p: 2,
                 width: 300
             }}
             onMouseOver={() => setShowDeleteButton(true)}
             onMouseOut={() => setShowDeleteButton(false)}
         >
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    height: '2rem'
-                }}
-            >
-                <Typography variant='h6'>{column.title}</Typography>
-                {showDeleteButton && (
-                    <DeleteColumn columnId={Number(column.id)} />
-                )}
-            </Box>
+            <Title
+                title={title}
+                columnId={Number(id)}
+                showDeleteButton={showDeleteButton}
+            />
 
-            <Droppable droppableId={String(column.id)}>
+            <Droppable droppableId={String(id)}>
                 {provided => (
                     <Box
                         ref={provided.innerRef}
                         {...provided.droppableProps}
-                        sx={{ margin: '0.5rem 0' }}
+                        sx={{ m: '0.5rem 0' }}
                     >
                         <Stack
                             direction='column'
-                            spacing={2}
                             sx={{
                                 maxHeight: '70vh',
                                 overflow: 'scroll'
@@ -71,10 +57,33 @@ export const BoardColumn: FC<Column> = column => {
                 )}
             </Droppable>
 
-            <CreateCard
-                columnId={Number(column.id)}
-                order={column.cards?.length}
-            />
+            <CreateCard columnId={Number(id)} order={cards.length} />
         </Paper>
     );
-};
+});
+
+const Title = memo(
+    ({
+        title,
+        columnId,
+        showDeleteButton
+    }: {
+        title: string;
+        columnId: number;
+        showDeleteButton: boolean;
+    }) => (
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                height: '2rem'
+            }}
+        >
+            <Typography variant='h6' component='h2'>
+                {title}
+            </Typography>
+            {showDeleteButton && <DeleteColumn columnId={columnId} />}
+        </Box>
+    )
+);
