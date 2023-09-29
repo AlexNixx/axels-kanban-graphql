@@ -30,20 +30,3 @@ module.exports = {
         }
     ]
 };
-
-//
-// const [updateCard] = useMutation(UPDATE_CARD);
-//
-// // Call this function when a card is moved
-// const handleMoveCard = async (cardId, sourceColumnId, destinationColumnId, destinationOrder) => {
-//     const card = cards.find(card => card.id === cardId);
-//     await updateCard({ variables: { ...card, column_id: destinationColumnId, order: destinationOrder } });
-//
-//     // Also update the order of all other cards in the source and destination columns
-//     const sourceCards = cards.filter(card => card.column_id === sourceColumnId);
-//     const destinationCards = cards.filter(card => card.column_id === destinationColumnId);
-//     await Promise.all([
-//         ...sourceCards.map((card, index) => updateCard({ variables: { ...card, order: index } })),
-//         ...destinationCards.map((card, index) => updateCard({ variables: { ...card, order: index } }))
-//     ]);
-// };
